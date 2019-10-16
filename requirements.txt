@@ -1,0 +1,9 @@
+cartopy
+matplotlib
+cmocean
+mport
+matplotlib
+numpy
+io
+PIL
+pickle
