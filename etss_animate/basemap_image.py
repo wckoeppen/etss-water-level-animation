@@ -63,10 +63,11 @@ def serialize_to_buffer(in_figure_object, dpi=72):
 #     return out_buffer
 
 
-def make_basemap(limit=0, extent=(170, 255, 40, 76), resolution="1080p"):
+def make_basemap(limit=0, extent=(170, 255, 40, 76), resolution="1080p",
+                 enforce_extent=False, free_aspect=False):
     """
     Return a basemap image (PNG) with a coastline and rivers.
-    
+
     Parameters
     ----------
     extent: (float, float, float, float), default:(170, 255, 40, 76)
@@ -77,10 +78,26 @@ def make_basemap(limit=0, extent=(170, 255, 40, 76), resolution="1080p"):
         The limits of the legend, which should match the
         gridded data
 
-    resolution: (float, float), "1080p", "720p"
+    resolution: (float, float), "1080p", "720p", default:"1080p"
         A tuple dictating the width and height of the output. In
         addition, some strings are accepted. "1080p" is an alias
         for (1920, 1080), and "720p" is aliased to (1080, 720).
+        
+    free_aspect: bool, default:False
+        By default, the aspect ratio of the output is dictated by the
+        provided resolution. E.g., if 1080p (1920px x 1080px) is
+        provided, the aspect ratio of the output will be 16:9. If
+        a free aspect ratio of the output is preferred (e.g., in
+        conjunction with enforce_extent), then only the first value
+        in the provided resolution will be used for the figure width,
+        and the figure height will be inferred from the extent.
+    
+    enforce_extent: bool, default:False
+        By default, the provided extent is treated as a minimum, and
+        it will be expanded to fill the aspect ratio of the output
+        resolution. Set this parameter to True if you prefer to have
+        exact map bounds and use white space to fill the remainder.
+    
     
     Returns
     -------
@@ -141,6 +158,7 @@ def make_basemap(limit=0, extent=(170, 255, 40, 76), resolution="1080p"):
 
     # Write to image file
     im = serialize_to_buffer(fig, dpi=dpi)
+    plt.close(fig)
 
     #    pic = serialize_to_pickle(fig)
     # Save as a pickle file
